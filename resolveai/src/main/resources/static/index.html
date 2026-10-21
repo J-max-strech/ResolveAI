@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#02733e">
+  <meta name="description" content="ResolveAI: demonstração de consulta a documentos institucionais.">
+  <title>ResolveAI — Assistente institucional</title>
+  <link rel="stylesheet" href="style.css">
+   <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+  <div class="app-shell">
+    <div class="scrim" data-scrim hidden></div>
+    <aside class="sidebar" id="sidebar" aria-label="Navegação principal">
+      <div class="brand-row">
+        <a class="brand" href="#chat" aria-label="ResolveAI, página inicial">
+          <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m15.5 15.5 5 5M8.2 10.8h5.2M10.8 8.2v5.2"/></svg></span>
+          <span>Resolve<span class="brand-ai">AI</span><small>Conhecimento institucional</small></span>
+        </a>
+        <button class="icon-button sidebar-collapse" type="button" data-close-sidebar aria-label="Fechar menu">×</button>
+      </div>
+      <button class="new-chat" type="button" data-new-chat><span aria-hidden="true">＋</span> Nova conversa</button>
+      <nav class="side-nav" aria-label="Seções">
+        <p class="nav-label">Workspace</p>
+        <button class="nav-link is-current" type="button" data-view="chat"><span aria-hidden="true">⌕</span> Conversar</button>
+        <button class="nav-link" type="button" data-view="documents"><span aria-hidden="true">▤</span> Documentos institucionais</button>
+      </nav>
+      <div class="recent-section">
+        <p class="nav-label">Recentes</p>
+        <button class="recent-item" data-prompt="Quais são as regras de frequência e aprovação?" type="button"><span>◷</span> Frequência e aprovação</button>
+        <button class="recent-item" data-prompt="Como funciona o estágio obrigatório?" type="button"><span>◷</span> Estágio obrigatório</button>
+        <button class="recent-item" data-prompt="Quais são as normas para aproveitamento de disciplinas?" type="button"><span>◷</span> Aproveitamento de disciplinas</button>
+        <button class="recent-item" data-prompt="Onde encontro os direitos e deveres dos estudantes?" type="button"><span>◷</span> Direitos e deveres</button>
+      </div>
+      <div class="sidebar-bottom">
+        <button class="nav-link" type="button" data-view="about"><span aria-hidden="true">ⓘ</span> Sobre o ResolveAI</button>
+        <div class="institution"><span class="institution-seal" aria-hidden="true">IF</span><span><strong>IFTO</strong><small>Contexto institucional</small></span><span class="status-dot" aria-label="Selecionado"></span></div>
+      </div>
+    </aside>
+
+    <main class="main-area" id="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><button class="icon-button menu-toggle" type="button" data-open-sidebar aria-label="Abrir menu">☰</button><span class="section-title" data-section-title>Conversar</span></div>
+        <div class="topbar-right"><span class="context-pill"><span class="status-dot"></span> IFTO</span><button class="icon-button help-button" type="button" data-view="about" aria-label="Sobre esta demonstração" title="Sobre o ResolveAI">?</button></div>
+      </header>
+
+      <section class="view chat-view" data-page="chat" aria-label="Conversa com ResolveAI">
+        <div class="conversation-scroll" data-conversation-scroll>
+          <div class="welcome" data-welcome>
+            <div class="welcome-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m15.5 15.5 5 5M8.2 10.8h5.2M10.8 8.2v5.2"/></svg></div>
+            <p class="eyebrow">Seu espaço de orientação institucional</p>
+            <h1>Olá! Como posso ajudar você hoje?</h1>
+            <p class="welcome-copy">Consulte regulamentos e encontre orientações institucionais de forma simples, rápida e transparente.</p>
+            <div class="demo-notice"><span aria-hidden="true">ⓘ</span><span><strong>Demonstração:</strong> as respostas e referências abaixo são fictícias e não representam orientações oficiais do IFTO.</span></div>
+            <h2 class="suggestions-heading">Experimente perguntar</h2>
+            <div class="suggestion-grid">
+              <button class="suggestion" type="button" data-prompt="Quais são as regras de frequência e aprovação?"><span class="suggestion-icon">◷</span><span>Quais são as regras de frequência e aprovação?</span><span class="suggestion-arrow">↗</span></button>
+              <button class="suggestion" type="button" data-prompt="Como funciona o estágio obrigatório?"><span class="suggestion-icon">▣</span><span>Como funciona o estágio obrigatório?</span><span class="suggestion-arrow">↗</span></button>
+              <button class="suggestion" type="button" data-prompt="Quais são as normas para aproveitamento de disciplinas?"><span class="suggestion-icon">▤</span><span>Quais são as normas para aproveitamento de disciplinas?</span><span class="suggestion-arrow">↗</span></button>
+              <button class="suggestion" type="button" data-prompt="Onde encontro os direitos e deveres dos estudantes?"><span class="suggestion-icon">◇</span><span>Onde encontro os direitos e deveres dos estudantes?</span><span class="suggestion-arrow">↗</span></button>
+            </div>
+          </div>
+          <div class="message-list" data-message-list aria-live="polite" aria-relevant="additions text"></div>
+        </div>
+        <div class="composer-wrap">
+          <form class="composer" data-composer>
+            <label class="sr-only" for="message-input">Sua pergunta</label>
+            <textarea id="message-input" rows="1" placeholder="Pergunte sobre os regulamentos do IFTO..." data-message-input maxlength="2000"></textarea>
+            <div class="composer-footer"><span class="composer-hint">Enter para enviar · Shift + Enter para nova linha</span><button class="send-button" type="submit" data-send disabled aria-label="Enviar pergunta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button></div>
+          </form>
+          <p class="disclaimer">As respostas desta demonstração são simuladas. Confira sempre os documentos oficiais.</p>
+        </div>
+      </section>
+
+      <section class="view documents-view" data-page="documents" hidden>
+        <div class="page-content"><p class="eyebrow">Biblioteca de referência</p><h1>Documentos institucionais</h1><p class="page-lead">Explore os documentos que poderão fundamentar as respostas do ResolveAI.</p>
+          <div class="demo-notice"><span aria-hidden="true">ⓘ</span><span>Os itens desta lista são <strong>exemplos demonstrativos fictícios</strong>, não documentos oficiais do IFTO.</span></div>
+          <div class="document-tools"><label class="search-box"><span aria-hidden="true">⌕</span><span class="sr-only">Pesquisar documentos</span><input type="search" placeholder="Buscar por nome..." data-doc-search></label><label class="filter-label">Categoria <select data-doc-filter><option value="all">Todas as categorias</option><option value="Acadêmico">Acadêmico</option><option value="Estágio">Estágio</option><option value="Assistência estudantil">Assistência estudantil</option><option value="Institucional">Institucional</option></select></label></div>
+          <div class="document-list" data-document-list></div><p class="empty-documents" data-doc-empty hidden>Nenhum documento encontrado. Tente outro termo ou categoria.</p>
+        </div>
+      </section>
+      <section class="view about-view" data-page="about" hidden><div class="page-content about-content"><div class="welcome-mark" aria-hidden="true">⌕</div><p class="eyebrow">Sobre o projeto</p><h1>Conhecimento institucional, com clareza.</h1><p class="page-lead">O ResolveAI é uma proposta de interface para facilitar a consulta a regulamentos e documentos institucionais por meio de perguntas em linguagem natural.</p><div class="about-card"><h2>Esta é uma demonstração visual</h2><p>Não há conexão com serviços de IA nem com o portal do IFTO. Respostas, fontes e documentos exibidos são fictícios e servem apenas para demonstrar a experiência. Consulte os canais e documentos oficiais para obter orientações válidas.</p><button class="text-button" type="button" data-view="chat">Voltar à conversa <span aria-hidden="true">→</span></button></div></div></section>
+    </main>
+  </div>
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+
+ 
+</body>
+</html>
