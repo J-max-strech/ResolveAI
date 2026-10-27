@@ -1,11 +1,12 @@
 
 package br.edu.ifto.resolveai.controller;
 
-import br.edu.ifto.resolveai.dto.ChatRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import br.edu.ifto.resolveai.dto.ChatRequest;
 
 @RestController
 public class ChatController {

@@ -1,27 +1,3 @@
-/* Demonstração local: substituir simulateAssistantQuery pela chamada REST quando houver API. */
-const demoResponses = [
-  {
-    match: ['frequência', 'aprovação'],
-    answer: 'Esta é uma resposta de demonstração fictícia. Na integração real, o ResolveAI consultará os documentos institucionais disponíveis e apresentará uma orientação acompanhada das referências correspondentes. Para uma decisão válida, consulte o regulamento oficial e a coordenação do seu curso.',
-    sources: [{ name: 'Exemplo demonstrativo — Regulamento Acadêmico', section: 'Seção fictícia: frequência e avaliação', page: 'página ilustrativa' }]
-  },
-  {
-    match: ['estágio'],
-    answer: 'Esta resposta é apenas ilustrativa e não descreve as regras de estágio do IFTO. Na versão integrada, a consulta poderá localizar os documentos pertinentes, resumir os trechos relevantes e indicar onde conferi-los. Procure a coordenação responsável para obter orientação oficial.',
-    sources: [{ name: 'Exemplo demonstrativo — Guia de Estágio', section: 'Seção fictícia: orientações gerais', page: 'página ilustrativa' }]
-  },
-  {
-    match: ['aproveitamento', 'disciplinas'],
-    answer: 'Demonstração fictícia: esta interface poderá ajudar a localizar informações sobre aproveitamento de estudos. Nenhum prazo, critério ou procedimento está sendo informado aqui. Consulte os documentos oficiais e a unidade acadêmica responsável.',
-    sources: [{ name: 'Exemplo demonstrativo — Regulamento Acadêmico', section: 'Seção fictícia: aproveitamento de estudos', page: 'página ilustrativa' }]
-  },
-  {
-    match: ['direitos', 'deveres'],
-    answer: 'Demonstração fictícia: em uma consulta real, as orientações seriam fundamentadas nos documentos institucionais vigentes e acompanhadas por referências verificáveis. Esta resposta não apresenta nem interpreta regras do IFTO.',
-    sources: [{ name: 'Exemplo demonstrativo — Manual do Estudante', section: 'Seção fictícia: direitos e deveres', page: 'página ilustrativa' }]
-  }
-];
-
 const demoDocuments = [
   { name: 'Exemplo demonstrativo — Regulamento Acadêmico', category: 'Acadêmico', updated: 'Exemplo de data: 12/03/2025', status: 'Vigente' },
   { name: 'Exemplo demonstrativo — Guia de Estágio', category: 'Estágio', updated: 'Exemplo de data: 04/02/2025', status: 'Vigente' },
@@ -90,62 +66,39 @@ function appendProcessing() {
   const row = document.createElement('div');
   row.className = 'processing';
   row.setAttribute('role', 'status');
-  row.innerHTML = '<span class="processing-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Consultando os documentos institucionais...</span>';
+  row.innerHTML = '<span class="processing-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Enviando pergunta ao servidor...</span>';
   row.dataset.processing = '';
   messageList.append(row);
 }
 
-function makeAssistantMessage(result) {
+function makeAssistantMessage(answerText, isError = false) {
   const article = document.createElement('article');
   article.className = 'message assistant-message';
   const label = document.createElement('div');
   label.className = 'assistant-label';
-  label.textContent = 'ResolveAI · resposta simulada';
+  label.textContent = isError ? 'ResolveAI · erro de comunicação' : 'ResolveAI · resposta do servidor';
   const bubble = document.createElement('div');
   bubble.className = 'message-bubble';
   const answer = document.createElement('div');
   answer.className = 'answer-copy';
-  answer.textContent = result.answer;
-  const notice = document.createElement('p');
-  notice.className = 'answer-disclaimer';
-  notice.textContent = 'Conteúdo fictício para demonstração. Não é orientação oficial.';
-  notice.style.cssText = 'font-size:10px;color:#8b7762;margin:12px 0 0;padding-top:9px;border-top:1px solid #edf0ed';
-  bubble.append(answer, notice);
+  answer.textContent = answerText;
+  bubble.append(answer);
+  if (!isError) {
+    const notice = document.createElement('p');
+    notice.className = 'answer-disclaimer';
+    notice.textContent = 'Resposta do protótipo. Ainda não há consulta a regulamentos institucionais.';
+    notice.style.cssText = 'font-size:10px;color:#8b7762;margin:12px 0 0;padding-top:9px;border-top:1px solid #edf0ed';
+    bubble.append(notice);
+  }
   const actions = document.createElement('div');
   actions.className = 'response-meta';
-  const sourceButton = document.createElement('button');
-  sourceButton.className = 'sources-toggle';
-  sourceButton.type = 'button';
-  sourceButton.textContent = '▤  Fontes de demonstração';
-  sourceButton.setAttribute('aria-expanded', 'false');
-  const sourcePanel = document.createElement('div');
-  sourcePanel.className = 'sources-panel';
-  sourcePanel.hidden = true;
-  const sourceTitle = document.createElement('h3');
-  sourceTitle.textContent = 'Referências fictícias';
-  sourcePanel.append(sourceTitle);
-  result.sources.forEach(source => {
-    const item = document.createElement('div');
-    item.className = 'source-item';
-    const strong = document.createElement('strong');
-    strong.textContent = source.name;
-    const detail = document.createElement('span');
-    detail.textContent = ` — ${source.section}, ${source.page}.`;
-    item.append(strong, detail);
-    sourcePanel.append(item);
-  });
-  sourceButton.addEventListener('click', () => {
-    sourcePanel.hidden = !sourcePanel.hidden;
-    sourceButton.setAttribute('aria-expanded', String(!sourcePanel.hidden));
-    sourceButton.textContent = sourcePanel.hidden ? '▤  Fontes de demonstração' : '▤  Ocultar fontes';
-  });
   const copyButton = document.createElement('button');
   copyButton.className = 'action-button';
   copyButton.type = 'button';
   copyButton.textContent = 'Copiar resposta';
   copyButton.addEventListener('click', async () => {
     try {
-      await navigator.clipboard.writeText(result.answer);
+      await navigator.clipboard.writeText(answerText);
       copyButton.textContent = 'Copiado!';
       showToast('Resposta copiada');
       setTimeout(() => { copyButton.textContent = 'Copiar resposta'; }, 1800);
@@ -170,21 +123,9 @@ function makeAssistantMessage(result) {
     });
     feedback.append(button);
   });
-  actions.append(sourceButton, copyButton, feedback);
-  article.append(label, bubble, actions, sourcePanel);
+  actions.append(copyButton, feedback);
+  article.append(label, bubble, actions);
   return article;
-}
-
-// Ponto único da simulação; substituir por fetch('/api/consultas', ...) na integração.
-async function simulateAssistantQuery(question) {
-  await new Promise(resolve => setTimeout(resolve, 950));
-  const normalized = question.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  const response = demoResponses.find(item => item.match.every(term => normalized.includes(term.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))));
-  if (response) return response;
-  return {
-    answer: 'A consulta real estará disponível após a integração com o sistema de IA. Esta demonstração não possui informação suficiente para responder com segurança. Consulte os canais oficiais do IFTO para obter uma orientação válida.',
-    sources: [{ name: 'Nenhuma fonte consultada', section: 'Demonstração sem correspondência', page: 'não aplicável' }]
-  };
 }
 
 async function submitQuestion(question) {
@@ -200,16 +141,26 @@ async function submitQuestion(question) {
   appendProcessing();
   scrollToLatest();
   try {
-    const result = await simulateAssistantQuery(text);
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'text/plain' },
+      body: JSON.stringify({ pergunta: text })
+    });
+    const responseText = await response.text();
+    if (!response.ok) {
+      throw new Error(responseText || `O servidor respondeu com erro (${response.status}).`);
+    }
     if (requestId !== state.requestId) return;
-    state.conversation.push({ role: 'assistant', content: result.answer });
+    state.conversation.push({ role: 'assistant', content: responseText });
     $('[data-processing]', messageList)?.remove();
-    messageList.append(makeAssistantMessage(result));
-  } catch {
+    messageList.append(makeAssistantMessage(responseText));
+  } catch (error) {
     if (requestId !== state.requestId) return;
     $('[data-processing]', messageList)?.remove();
-    const fallback = await simulateAssistantQuery('consulta sem correspondência');
-    messageList.append(makeAssistantMessage(fallback));
+    const errorMessage = error instanceof TypeError
+      ? 'Não foi possível conectar à API. Verifique se o servidor ResolveAI está em execução e tente novamente.'
+      : `Não foi possível obter uma resposta: ${error.message}`;
+    messageList.append(makeAssistantMessage(errorMessage, true));
   } finally {
     state.busy = false;
     resizeInput();
